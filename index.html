@@ -1,25 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fizzy Pop - YouTube Video Downloader</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fizzy Pop - Coming Soon</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="styles.css" rel="stylesheet">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        /* Modern CSS Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Animations */
+        /* Custom animations */
         @keyframes gradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -27,462 +14,75 @@
         }
 
         @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-            100% { transform: translateY(0) rotate(360deg); }
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
         }
 
-        @keyframes float-reverse {
-            0% { transform: translateY(0) rotate(360deg); }
-            50% { transform: translateY(-30px) rotate(180deg); }
-            100% { transform: translateY(0) rotate(0deg); }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 20px rgba(0, 191, 166, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 191, 166, 0.8); }
+            100% { box-shadow: 0 0 20px rgba(0, 191, 166, 0.3); }
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        @keyframes float-in {
-            0% { transform: translateY(30px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Base styles */
         body {
-            color: white;
-            font-family: system-ui, -apple-system, sans-serif;
-            line-height: 1.5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
             background: linear-gradient(-45deg, #1a1a2e, #0066cc, #0099ff, #00BFA6);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
-            position: relative;
-            overflow-x: hidden;
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
-        /* Overlay for better text readability */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            pointer-events: none;
-            z-index: 1;
+        .logo-container {
+            animation: float 3s ease-in-out infinite;
         }
 
-        /* Bubble elements */
-        .bubble {
-            position: fixed;
-            background: radial-gradient(circle at 30% 30%, rgba(0, 153, 255, 0.3), rgba(255, 255, 255, 0.2));
-            border-radius: 50%;
-            backdrop-filter: blur(2px);
-            z-index: 0;
-            pointer-events: none;
+        .glow-effect {
+            animation: pulse-glow 2s ease-in-out infinite;
         }
 
-        .bubble:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            left: -50px;
-            top: 20%;
-            animation: float 20s ease-in-out infinite;
-        }
-
-        .bubble:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            right: -30px;
-            top: 30%;
-            animation: float-reverse 25s ease-in-out infinite;
-        }
-
-        .bubble:nth-child(3) {
-            width: 150px;
-            height: 150px;
-            left: 20%;
-            bottom: 20%;
-            animation: float 18s ease-in-out infinite;
-        }
-
-        .bubble:nth-child(4) {
-            width: 400px;
-            height: 400px;
-            right: 10%;
-            bottom: -100px;
-            animation: float-reverse 22s ease-in-out infinite;
-        }
-
-        /* Header styles */
-        header {
-            position: relative;
-            z-index: 2;
-            padding: 1rem;
-            background: rgba(26, 26, 26, 0.7);
-            backdrop-filter: blur(10px);
-        }
-
-        .logo {
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .logo-img {
-            height: 40px;
-            width: auto;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover .logo-img {
-            transform: scale(1.05);
-        }
-
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(45deg, #0099ff, #00BFA6);
+        .text-gradient {
+            background: linear-gradient(45deg, #00BFA6, #0099ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 20px rgba(0, 153, 255, 0.5);
-        }
-
-        /* Main content styles */
-        main {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .container {
-            max-width: 800px;
-            width: 100%;
-            text-align: center;
-            animation: float-in 1s ease-out;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            background: linear-gradient(45deg, #00BFA6, #00D4B8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        .description {
-            color: #ffffff;
-            margin-bottom: 3rem;
-            font-size: 1.25rem;
-            opacity: 0;
-            animation: float-in 0.5s ease-out 0.3s forwards;
-        }
-
-        /* Search form styles */
-        .search-form {
-            background: rgba(26, 26, 26, 0.7);
-            padding: 2.5rem;
-            border-radius: 1rem;
-            box-shadow: 
-                0 4px 6px rgba(0, 0, 0, 0.2),
-                0 0 20px rgba(0, 191, 166, 0.3),
-                0 0 40px rgba(0, 191, 166, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 191, 166, 0.2);
-            opacity: 0;
-            animation: float-in 0.5s ease-out 0.6s forwards;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .search-form:hover {
-            transform: translateY(-5px);
-            box-shadow: 
-                0 4px 6px rgba(0, 0, 0, 0.2),
-                0 0 30px rgba(0, 191, 166, 0.4),
-                0 0 60px rgba(0, 191, 166, 0.2);
-        }
-
-        .input-group {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .url-input {
-            flex: 1;
-            padding: 1rem 1.5rem;
-            border: 2px solid rgba(0, 191, 166, 0.3);
-            border-radius: 0.5rem;
-            background: rgba(38, 38, 38, 0.6);
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        .url-input:focus {
-            outline: none;
-            border-color: #00BFA6;
-            box-shadow: 0 0 15px rgba(0, 191, 166, 0.3);
-            background: rgba(38, 38, 38, 0.8);
-        }
-
-        .submit-button {
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #00BFA6, #00D4B8);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .submit-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.2),
-                transparent
-            );
-            transition: 0.5s;
-        }
-
-        .submit-button:hover::before {
-            left: 100%;
-        }
-
-        .submit-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 191, 166, 0.3);
-        }
-
-        .examples {
-            color: #9ca3af;
-            font-size: 0.875rem;
-            opacity: 0;
-            animation: float-in 0.5s ease-out 0.9s forwards;
-        }
-
-        .examples a {
-            color: #00BFA6;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .examples a:hover {
-            color: #00D4B8;
-            text-shadow: 0 0 10px rgba(0, 191, 166, 0.3);
-        }
-
-        /* Features section */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
-            padding: 0 1rem;
-            opacity: 0;
-            animation: float-in 0.5s ease-out 1.2s forwards;
-        }
-
-        .feature {
-            background: rgba(26, 26, 26, 0.7);
-            padding: 2rem;
-            border-radius: 1rem;
-            text-align: left;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 191, 166, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .feature:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 20px rgba(0, 191, 166, 0.3);
-            border-color: #00BFA6;
-        }
-
-        .feature h3 {
-            color: #00BFA6;
-            margin-bottom: 1rem;
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .feature h3 svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-
-        .feature p {
-            color: #9ca3af;
-            font-size: 0.875rem;
-            line-height: 1.6;
-        }
-
-        /* Error message styles */
-        .error-message {
-            color: #ef4444;
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
-            display: none;
-            padding: 0.75rem;
-            background: rgba(239, 68, 68, 0.1);
-            border-radius: 0.5rem;
-            backdrop-filter: blur(5px);
-            animation: float-in 0.3s ease-out;
-        }
-
-        /* Footer styles */
-        footer {
-            background: rgba(26, 26, 26, 0.7);
-            padding: 1rem;
-            text-align: center;
-            color: #9ca3af;
-            font-size: 0.875rem;
-            backdrop-filter: blur(10px);
-            position: relative;
-            z-index: 2;
         }
     </style>
-  </head>
-  <body>
-    <!-- Decorative bubbles -->
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-
-    <header>
-      <div class="header-content">
-        <a href="/" class="logo">
-          <img src="/fizzy_pop.png" alt="Fizzy Pop" class="logo-img">
-          <span class="logo-text">Fizzy Pop</span>
-        </a>
-      </div>
-    </header>
-
-    <main>
-      <div class="container">
-        <h1>Download YouTube Videos</h1>
-        <p class="description">
-          Transform your favorite YouTube content into downloadable files with just a few clicks
-        </p>
-
-        <div class="search-form">
-          <form id="downloadForm" onsubmit="handleSubmit(event)">
-            <div class="input-group">
-              <input 
-                type="text" 
-                id="videoUrl" 
-                class="url-input" 
-                placeholder="Paste YouTube URL here..."
-                required
-              >
-              <button type="submit" class="submit-button">Download</button>
-            </div>
-            <p class="examples">
-              Example: <a href="#" onclick="setExample(event)">https://www.youtube.com/watch?v=dQw4w9WgXcQ</a>
-            </p>
-            <div id="errorMessage" class="error-message"></div>
-          </form>
+</head>
+<body class="flex items-center justify-center min-h-screen text-white">
+    <div class="text-center px-4 max-w-2xl mx-auto">
+        <!-- Logo -->
+        <div class="logo-container mb-8">
+            <img src="fizzy_pop.png" alt="Fizzy Pop" class="w-24 h-24 mx-auto rounded-full glow-effect">
         </div>
-
-        <div class="features">
-          <div class="feature">
-            <h3>
-              <svg viewBox="0 0 24 24">
-                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-              </svg>
-              Multiple Formats
-            </h3>
-            <p>Download videos in MP4 format or extract audio in MP3 format with the highest quality available</p>
-          </div>
-          <div class="feature">
-            <h3>
-              <svg viewBox="0 0 24 24">
-                <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM8 15c0-1.66 1.34-3 3-3 .35 0 .69.07 1 .18V6h5v2h-3v7.03c-.02 1.64-1.35 2.97-3 2.97-1.66 0-3-1.34-3-3z"/>
-              </svg>
-              Quality Options
-            </h3>
-            <p>Choose from various quality options up to 1080p for the best viewing experience</p>
-          </div>
-          <div class="feature">
-            <h3>
-              <svg viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-              </svg>
-              Fast & Free
-            </h3>
-            <p>Quick downloads with no registration required, completely free to use without limitations</p>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <footer>
-      <p>&copy; 2024 Fizzy Pop. All rights reserved.</p>
-    </footer>
-
-    <script>
-      function handleSubmit(event) {
-        event.preventDefault();
-        const videoUrl = document.getElementById('videoUrl').value;
-        const errorMessage = document.getElementById('errorMessage');
         
-        try {
-          const url = new URL(videoUrl);
-          const videoId = url.searchParams.get('v');
-          
-          if (!videoId) {
-            throw new Error('Invalid YouTube URL');
-          }
-          
-          window.location.href = `/video.html?v=${videoId}`;
-          
-        } catch (error) {
-          errorMessage.textContent = 'Please enter a valid YouTube URL';
-          errorMessage.style.display = 'block';
-        }
-      }
-
-      function setExample(event) {
-        event.preventDefault();
-        document.getElementById('videoUrl').value = event.target.textContent;
-      }
-    </script>
-  </body>
+        <!-- Main heading -->
+        <h1 class="text-6xl md:text-8xl font-bold mb-6 text-gradient">
+            Fizzy Pop
+        </h1>
+        
+        <!-- Coming soon message -->
+        <h2 class="text-3xl md:text-4xl font-light mb-8 opacity-90">
+            Coming Soon
+        </h2>
+        
+        <!-- Description -->
+        <p class="text-lg md:text-xl opacity-80 mb-12 leading-relaxed">
+            We're cooking up something amazing! 🚀<br>
+            Stay tuned for an incredible experience.
+        </p>
+        
+        <!-- Animated dots -->
+        <div class="flex justify-center space-x-2 mb-8">
+            <div class="w-3 h-3 bg-white rounded-full animate-bounce" style="animation-delay: 0ms;"></div>
+            <div class="w-3 h-3 bg-white rounded-full animate-bounce" style="animation-delay: 150ms;"></div>
+            <div class="w-3 h-3 bg-white rounded-full animate-bounce" style="animation-delay: 300ms;"></div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="text-sm opacity-60 mt-16">
+            <p>&copy; 2024 Fizzy Pop. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
 </html> 
